@@ -9,7 +9,7 @@ export default class Region extends BaseModel {
   declare name: string
 
   @column()
-  declare zone_id: number
+  declare zoneId: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

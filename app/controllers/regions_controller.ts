@@ -33,7 +33,7 @@ export default class RegionsController {
 
     const region = await Region.create({
       name: data.name,
-      zone_id: data.zone_id,
+      zoneId: data.zone_id,
     })
 
     return responseUtil.created(response, region)
@@ -59,7 +59,7 @@ export default class RegionsController {
       })
 
     region.name = data.name
-    region.zone_id = data.zone_id
+    region.zoneId = data.zone_id
     await region.save()
 
     return responseUtil.success(response, region, 'Region updated successfully')

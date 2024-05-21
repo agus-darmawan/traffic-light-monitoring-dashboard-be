@@ -9,7 +9,7 @@ export default class Device extends BaseModel {
   declare name: string
 
   @column()
-  declare region_id: number
+  declare regionId: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
