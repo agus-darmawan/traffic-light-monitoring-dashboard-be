@@ -20,6 +20,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
     @column({ serializeAs: null })
     declare password: string
 
+    @column()
+    declare role: string
+
     @column.dateTime()
     declare emailVerifiedAt: DateTime
 
