@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-export default class Region extends BaseModel {
+export default class Device extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -9,7 +9,7 @@ export default class Region extends BaseModel {
   declare name: string
 
   @column()
-  declare zone_id: number
+  declare region_id: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
