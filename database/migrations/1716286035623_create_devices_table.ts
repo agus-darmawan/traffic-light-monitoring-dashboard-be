@@ -6,7 +6,16 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
+      table.integer('tid').notNullable()
       table.string('name').notNullable()
+      table
+      .integer('zone_id')
+      .notNullable()
+      .unsigned()
+      .references('id')
+      .inTable('zones')
+      .onDelete('CASCADE')
+      .notNullable()
       table
       .integer('region_id')
       .notNullable()
