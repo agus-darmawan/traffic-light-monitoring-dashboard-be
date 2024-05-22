@@ -23,6 +23,7 @@ export default class RegionsController {
         vine.object({
           name: vine.string().trim(),
           zone_id: vine.number(),
+          timezone: vine.string().trim(),
         })
       )
       .validate(request.all(), {
@@ -34,6 +35,7 @@ export default class RegionsController {
     const region = await Region.create({
       name: data.name,
       zoneId: data.zone_id,
+      timeZone: data.timezone,
     })
 
     return responseUtil.created(response, region)
@@ -50,6 +52,7 @@ export default class RegionsController {
         vine.object({
           name: vine.string().trim(),
           zone_id: vine.number(),
+          timezone: vine.string().trim(),
         })
       )
       .validate(request.all(), {
@@ -60,6 +63,7 @@ export default class RegionsController {
 
     region.name = data.name
     region.zoneId = data.zone_id
+    region.timeZone = data.timezone
     await region.save()
 
     return responseUtil.success(response, region, 'Region updated successfully')

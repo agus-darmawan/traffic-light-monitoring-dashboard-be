@@ -15,6 +15,7 @@ export default class extends BaseSchema {
        .inTable('zones')
        .onDelete('CASCADE')
        .notNullable()
+      table.string('timezone').notNullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

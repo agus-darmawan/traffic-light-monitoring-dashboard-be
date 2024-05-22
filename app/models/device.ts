@@ -18,7 +18,7 @@ export default class Device extends BaseModel {
   declare regionId: number
 
   @column()
-  declare registered_by: number
+  declare registeredBy: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

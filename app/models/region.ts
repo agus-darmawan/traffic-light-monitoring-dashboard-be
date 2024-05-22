@@ -11,6 +11,9 @@ export default class Region extends BaseModel {
   @column()
   declare zoneId: number
 
+  @column()
+  declare timeZone: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
