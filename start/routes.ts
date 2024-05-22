@@ -1,40 +1,23 @@
-const AuthController = () => import('#controllers/auth_controller')
-import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
-
 import { HttpContext } from '@adonisjs/core/http'
 
+import { middleware } from './kernel.js'
+import authRoutes from './routes/v1/auth.js'
+import zoneRoutes from './routes/v1/zones.js'
 
 router.get('/', async ({ response }: HttpContext) => {
-    response.status(200).json({
-      status: 200,
-      message: 'Welcome to SMBRICast by Agus Darmawan',
-    })
+  response.status(200).json({
+    status: 200,
+    message: 'Welcome to SMBRICast by Agus Darmawan',
   })
+})
   
-  // Group routers under api/v1 prefix
-
-
+router.group(() => {
+  authRoutes()
   router.group(() => {
-    // Group authentication-related routers under /auth prefix
     router.group(() => {
-      router.post('/login', [AuthController, 'login'])
-      router.post('/register', [AuthController, 'register'])
-      router.get('/email/verify/:email/:id', [AuthController, 'verifyEmail']).as('verifyEmail')
-      router.post('/password/forgot', [AuthController, 'forgotPassword'])
-      router.post('/password/reset/:id/:token', [AuthController, 'resetPassword']).as('resetPassword')
-  
-      router.group(() => {
-        // routers which require authentication
-        router.get('/user', [AuthController, 'user'])
-        router.post('/logout', [AuthController, 'logout'])
-        router.post('/email/verify/resend', [AuthController, 'resendVerificationEmail'])
-  
-        router.group(() => {
-          // routers which require verified email
-        }).middleware(middleware.verifiedEmail())
-      }).middleware(middleware.auth({ guards: ['api'] }))
-    }).prefix('/auth')
+      zoneRoutes()
+    }).middleware(middleware.verifiedEmail())
+  }).middleware(middleware.auth({ guards: ['api'] }))
 
-    
-  }).prefix('/api/v1')
+}).prefix('/api/v1')
