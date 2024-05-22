@@ -6,9 +6,6 @@ export default class Device extends BaseModel {
   declare id: number
 
   @column()
-  declare tid: number
-
-  @column()
   declare name: string
 
   @column()

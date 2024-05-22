@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Device from '#models/device'
 import { responseUtil } from '../../helper/response_util.js'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export default class DevicesController {
     async index({ response }: HttpContext) {
@@ -9,7 +10,7 @@ export default class DevicesController {
     }
 
     async show({ params, response }: HttpContext) {
-        const device = await Device.findBy('tid', params.tid)
+        const device = await Device.findBy('id', params.id)
         if (!device) {
             return responseUtil.notFound(response)
         }
@@ -17,19 +18,57 @@ export default class DevicesController {
     }
 
     async store({ request, response }: HttpContext) {
-        const data = request.only(['tid', 'name', 'zoneId', 'regionId'])
-        const device = await Device.create(data)
-        return responseUtil.created(response, device, 'Device created successfully')
+        const data = await vine
+          .compile(
+            vine.object({
+                name: vine.string().trim(),
+                zone_id: vine.number(),
+                region_id: vine.number(),
+                registered_by: vine.number(),
+            })
+          )
+          .validate(request.all(), {
+            messagesProvider: new SimpleMessagesProvider({
+              'required': 'The {{ field }} field is required.',
+            }),
+          })
+    
+        const device = await Device.create({
+            name: data.name,
+            zoneId: data.zone_id,
+            regionId: data.region_id,
+            registeredBy: data.registered_by,
+        })
+    
+        return responseUtil.created(response, device)
     }
 
     async update({ params, request, response }: HttpContext) {
-        const device = await Device.findBy('tid', params.tid)
+        const device = await Device.findBy('id', params.id)
         if (!device) {
             return responseUtil.notFound(response)
         }
-        const data = request.only(['name', 'zoneId', 'regionId'])
-        device.merge(data)
-        await device.save()
+
+        const data = await vine
+            .compile(
+                vine.object({
+                    name: vine.string().trim(),
+                    zone_id: vine.number(),
+                    region_id: vine.number(),
+                    registered_by: vine.number(),
+                })
+            )
+            .validate(request.all(), {
+                messagesProvider: new SimpleMessagesProvider({
+                'required': 'The {{ field }} field is required.',
+                }),
+            })
+
+            device.name = data.name
+            device.zoneId = data.zone_id
+            device.regionId = data.region_id
+            device.registeredBy = data.registered_by
+            await device.save()
         return responseUtil.success(response, device, 'Device updated successfully')
     }
 
