@@ -8,13 +8,6 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('name').notNullable()
       table
-      .integer('zone_id')
-      .notNullable()
-      .unsigned()
-      .references('id')
-      .inTable('zones')
-      .onDelete('CASCADE')
-      .notNullable()
       table
       .integer('region_id')
       .notNullable()

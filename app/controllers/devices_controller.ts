@@ -22,7 +22,6 @@ export default class DevicesController {
           .compile(
             vine.object({
                 name: vine.string().trim(),
-                zone_id: vine.number(),
                 region_id: vine.number(),
                 registered_by: vine.number(),
             })
@@ -35,7 +34,6 @@ export default class DevicesController {
     
         const device = await Device.create({
             name: data.name,
-            zoneId: data.zone_id,
             regionId: data.region_id,
             registeredBy: data.registered_by,
         })
@@ -53,7 +51,6 @@ export default class DevicesController {
             .compile(
                 vine.object({
                     name: vine.string().trim(),
-                    zone_id: vine.number(),
                     region_id: vine.number(),
                     registered_by: vine.number(),
                 })
@@ -65,7 +62,6 @@ export default class DevicesController {
             })
 
             device.name = data.name
-            device.zoneId = data.zone_id
             device.regionId = data.region_id
             device.registeredBy = data.registered_by
             await device.save()
