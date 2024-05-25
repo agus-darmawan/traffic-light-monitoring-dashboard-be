@@ -6,7 +6,7 @@ export default class Technician extends BaseModel {
   declare id: number
 
   @column()
-  declare name: string
+  declare userId: number
 
   @column()
   declare regionId: number
