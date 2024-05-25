@@ -9,9 +9,6 @@ export default class Technician extends BaseModel {
   declare name: string
 
   @column()
-  declare zoneId: number
-
-  @column()
   declare regionId: number
 
   @column.dateTime({ autoCreate: true })

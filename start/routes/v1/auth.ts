@@ -11,7 +11,6 @@ export default function authRoutes() {
         router.post('/password/reset/:id/:token', [AuthController, 'resetPassword']).as('resetPassword')
 
         router.group(() => {
-            // routers which require authentication
             router.get('/user', [AuthController, 'user'])
             router.post('/logout', [AuthController, 'logout'])
             router.post('/email/verify/resend', [AuthController, 'resendVerificationEmail'])

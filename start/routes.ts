@@ -5,8 +5,7 @@ import { middleware } from './kernel.js'
 import authRoutes from './routes/v1/auth.js'
 import zoneRoutes from './routes/v1/zones.js'
 import regionsRoutes from './routes/v1/regions.js'
-import statusesRoutesPrivate from './routes/v1/statuses_private.js'
-import statusesRoutesPublic from './routes/v1/statuses.js'
+import statusesRoutes from './routes/v1/statuses.js'
 
 router.get('/', async ({ response }: HttpContext) => {
   response.status(200).json({
@@ -17,12 +16,11 @@ router.get('/', async ({ response }: HttpContext) => {
   
 router.group(() => {
   authRoutes()
-  statusesRoutesPublic()
+  statusesRoutes()
   router.group(() => {
     router.group(() => {
       zoneRoutes()
       regionsRoutes()
-      statusesRoutesPrivate()
     }).middleware(middleware.verifiedEmail())
   }).middleware(middleware.auth({ guards: ['api'] }))
 
