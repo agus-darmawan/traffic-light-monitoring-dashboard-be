@@ -69,7 +69,7 @@ export default class DevicesController {
     }
 
     async destroy({ params, response }: HttpContext) {
-        const device = await Device.findBy('tid', params.tid)
+        const device = await Device.findBy('id', params.tid)
         if (!device) {
             return responseUtil.notFound(response)
         }
