@@ -23,9 +23,11 @@ export default class DevicesController {
                         const technician = await Technician.findBy('user_id',device.registeredBy);
                         register_by_name = technician ? technician.name : null;
                     }
+                    const tid = String(zone ? zone.id : null) +String(region ? region.id : null) +String(device.id)
                     
                     return {
                         id: device.id,
+                        tid: tid,
                         name: device.name,
                         zone_id: zone ? zone.id : null,
                         zone_name: zone ? zone.name : null,
