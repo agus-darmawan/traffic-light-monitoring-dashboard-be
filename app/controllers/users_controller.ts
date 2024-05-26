@@ -5,8 +5,21 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export default class UsersController {
     async index({ response }: HttpContext) {
-        const users = await User.all()
-        return responseUtil.success(response, users, 'Users retrieved successfully')
+        try {
+          const users = await User.all();
+          const data = users
+            .filter(user => user.role === 'user')
+            .map(user => ({
+              id: user.id,
+              email: user.email,
+              email_verified: user.emailVerifiedAt ? true : false
+            }));
+      
+          return responseUtil.success(response, data, 'Users retrieved successfully');
+        } catch (error) {
+          console.error('Error retrieving users:', error);
+          return responseUtil.notFound(response, 'An error occurred while retrieving users');
+        }
     }
 
     async show({ params, response }: HttpContext) {
@@ -44,6 +57,7 @@ export default class UsersController {
     }
 
     async update({ params,request, response }: HttpContext) {
+        console.log(params.id)
         const user = await User.findBy('id', params.id)
         if (!user) {
             return responseUtil.notFound(response)
@@ -70,7 +84,7 @@ export default class UsersController {
     }
 
     async destroy({ params, response }: HttpContext) {
-        const user = await User.findBy('id', params.tid)
+        const user = await User.findBy('id', params.id)
         if (!user) {
             return responseUtil.notFound(response)
         }

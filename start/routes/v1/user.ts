@@ -1,7 +1,7 @@
 const UsersController = () => import('#controllers/users_controller')
 import router from '@adonisjs/core/services/router'
 
-export default function UsersRoutes(){
+export default function usersRoutes(){
     router.group(() => {
         router.get('/', [UsersController, 'index'])
         router.post('/', [UsersController,'store'])
