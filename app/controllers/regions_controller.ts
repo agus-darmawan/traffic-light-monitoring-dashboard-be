@@ -33,6 +33,24 @@ export default class RegionsController {
     }
     return responseUtil.success(response, region, 'Region retrieved successfully')
   }
+  async showByZoneId({ params, response }: HttpContext) {
+    try {
+      const zone = await Zone.find(params.id);
+      if (!zone) {
+        return responseUtil.notFound(response);
+      }
+  
+      const devices = await Region.query().where('zone_id', zone.id);
+      if (!devices) {
+        return responseUtil.notFound(response, 'No devices found for this zone');
+      }
+  
+      return responseUtil.success(response, devices, 'Devices retrieved successfully');
+    } catch (error) {
+      console.error('Error fetching devices by zone ID:', error);
+      return responseUtil.notFound(response, 'An error occurred while fetching devices');
+    }
+}
 
   async store({ request, response }: HttpContext) {
     const data = await vine
