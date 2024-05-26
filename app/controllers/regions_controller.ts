@@ -1,12 +1,29 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Region from '#models/region'
+import Zone from '#models/zone'
 import { responseUtil } from '../../helper/response_util.js'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export default class RegionsController {
   async index({ response }: HttpContext) {
-    const regions = await Region.all()
-    return responseUtil.success(response, regions, 'Regions retrieved successfully')
+    try {
+      const regions = await Region.all();
+      const regionsWithZoneNames = await Promise.all(
+        regions.map(async (region) => {
+          const zone = await Zone.find(region.zoneId);
+          return {
+            id : region.id,
+            name: region.name,
+            zone_id: region.zoneId,
+            zone_name: zone ? zone.name : null,
+            timezone: region.timezone,
+          };
+        })
+      );
+      return responseUtil.success(response, regionsWithZoneNames, 'Regions retrieved successfully');
+    } catch (error) {
+      return responseUtil.notFound(response, 'Failed to retrieve regions');
+    }
   }
 
   async show({ params, response }: HttpContext) {
@@ -35,7 +52,7 @@ export default class RegionsController {
     const region = await Region.create({
       name: data.name,
       zoneId: data.zone_id,
-      timeZone: data.timezone,
+      timezone: data.timezone,
     })
 
     return responseUtil.created(response, region)
@@ -63,7 +80,7 @@ export default class RegionsController {
 
     region.name = data.name
     region.zoneId = data.zone_id
-    region.timeZone = data.timezone
+    region.timezone = data.timezone
     await region.save()
 
     return responseUtil.success(response, region, 'Region updated successfully')

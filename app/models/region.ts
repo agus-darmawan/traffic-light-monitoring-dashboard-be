@@ -12,7 +12,7 @@ export default class Region extends BaseModel {
   declare zoneId: number
 
   @column()
-  declare timeZone: string
+  declare timezone: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

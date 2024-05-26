@@ -46,7 +46,7 @@ export default class ZonesController {
         const data = await vine
             .compile(
                 vine.object({
-                    name: vine.string().trim()
+                    name: vine.string()
                 })
             )
             .validate(request.all(), {
