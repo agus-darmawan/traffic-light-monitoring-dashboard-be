@@ -3,7 +3,7 @@ import router from '@adonisjs/core/services/router'
 
 export default function usersRoutes(){
     router.group(() => {
-        router.get('/', [UsersController, 'index'])
+        router.get('/:role', [UsersController, 'index'])
         router.post('/', [UsersController,'store'])
         router.get('/:id', [UsersController,'show'])
         router.patch('/:id', [UsersController, 'update'])

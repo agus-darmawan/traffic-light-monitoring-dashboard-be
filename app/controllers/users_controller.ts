@@ -4,11 +4,12 @@ import { responseUtil } from '../../helper/response_util.js'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export default class UsersController {
-    async index({ response }: HttpContext) {
+    async index({ params,response }: HttpContext) {
+        const role = params.role
         try {
           const users = await User.all();
           const data = users
-            .filter(user => user.role === 'user')
+            .filter(user => user.role === role)
             .map(user => ({
               id: user.id,
               email: user.email,
