@@ -5,7 +5,7 @@ import Zone from '#models/zone'
 import Technician from '#models/technician'
 import User from '#models/user'
 import Status from '#models/status'
-import { DateTime } from 'luxon'
+import { getDeviceStatus } from '../../helper/get_device_status.js'
 import { responseUtil } from '../../helper/response_util.js'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
@@ -28,16 +28,7 @@ export default class DevicesController {
                     }
                     const tid = String(zone ? zone.id : null) +String(region ? region.id : null) +String(device.id)
                     
-                    let isActive = false;
-                    if (status) {
-                        const now = new Date();
-                        const updatedAt = new Date((status.updatedAt as DateTime<boolean>).toString());
-                        const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000);
-                      
-                        if (updatedAt >= thirtyMinutesAgo) {
-                          isActive = true;
-                        }
-                      }
+                    const isActive = getDeviceStatus(status?.updatedAt);
                     return {
                         id: device.id,
                         tid: tid,

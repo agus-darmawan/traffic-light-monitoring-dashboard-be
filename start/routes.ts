@@ -8,6 +8,7 @@ import regionsRoutes from './routes/v1/regions.js'
 import statusesRoutes from './routes/v1/statuses.js'
 import devicesRoutes from './routes/v1/devices.js'
 import usersRoutes from './routes/v1/user.js'
+import dashboardRoutes from './routes/v1/dashboard.js'
 
 router.get('/', async ({ response }: HttpContext) => {
   response.status(200).json({
@@ -21,6 +22,7 @@ router.group(() => {
   statusesRoutes()
   router.group(() => {
     router.group(() => {
+      dashboardRoutes()
       zoneRoutes()
       regionsRoutes()
       devicesRoutes()
