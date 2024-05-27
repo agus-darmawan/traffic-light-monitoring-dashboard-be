@@ -4,6 +4,8 @@ import Region from '#models/region'
 import Zone from '#models/zone'
 import Technician from '#models/technician'
 import User from '#models/user'
+import Status from '#models/status'
+import { DateTime } from 'luxon'
 import { responseUtil } from '../../helper/response_util.js'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
@@ -17,6 +19,7 @@ export default class DevicesController {
                     const region = await Region.find(device.regionId);
                     const zone = region ? await Zone.find(region.zoneId) : null;
                     const user = await User.find(device.registeredBy);
+                    const status = await Status.findBy('device_id', device.id)
                     
                     let register_by_name = null;
                     if (user && user.role == 'technician') {
@@ -25,6 +28,16 @@ export default class DevicesController {
                     }
                     const tid = String(zone ? zone.id : null) +String(region ? region.id : null) +String(device.id)
                     
+                    let isActive = false;
+                    if (status) {
+                        const now = new Date();
+                        const updatedAt = new Date((status.updatedAt as DateTime<boolean>).toString());
+                        const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000);
+                      
+                        if (updatedAt >= thirtyMinutesAgo) {
+                          isActive = true;
+                        }
+                      }
                     return {
                         id: device.id,
                         tid: tid,
@@ -34,6 +47,7 @@ export default class DevicesController {
                         region_id: device.regionId,
                         region_name: region ? region.name : null,
                         register_by_id: device.registeredBy,
+                        is_active: isActive,
                         register_by: register_by_name ? register_by_name : user ? user.email : null,
                     };
                 })
