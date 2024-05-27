@@ -1,28 +1,52 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
+import Technician from '#models/technician'
+import Zone from '#models/zone'
 import { responseUtil } from '../../helper/response_util.js'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export default class UsersController {
-    async index({ params,response }: HttpContext) {
-        const role = params.role
+    async index({ params, response }: HttpContext) {
+        const role = params.role;
         try {
           const users = await User.all();
-          const data = users
-            .filter(user => user.role === role)
-            .map(user => ({
-              id: user.id,
-              email: user.email,
-              email_verified: user.emailVerifiedAt ? true : false
-            }));
+          let data = await Promise.all(
+            users
+              .filter(user => user.role === role)
+              .map(async user => {
+                const userData: {
+                  id: number;
+                  email: string;
+                  email_verified: boolean;
+                  name: string | undefined;
+                  zone_id: number | undefined;
+                  zone_name: string | undefined;
+                } = {
+                  id: user.id,
+                  email: user.email,
+                  email_verified: !!user.emailVerifiedAt,
+                  name: undefined,
+                  zone_id: undefined,
+                  zone_name: undefined,
+                };
       
+                if (role === 'technician') {
+                  const technician = await Technician.findBy('user_id', user.id);
+                  userData.name = technician ? technician.name : undefined;
+                  userData.zone_id = technician? technician.zoneId : undefined;
+                  const zone = await Zone.findBy('id', userData.zone_id);
+                  userData.zone_name = zone? zone.name : undefined;
+                }
+                return userData;
+              })
+          );
           return responseUtil.success(response, data, 'Users retrieved successfully');
         } catch (error) {
           console.error('Error retrieving users:', error);
           return responseUtil.notFound(response, 'An error occurred while retrieving users');
         }
     }
-
+      
     async show({ params, response }: HttpContext) {
         const user = await User.findBy('id', params.id)
         if (!user) {

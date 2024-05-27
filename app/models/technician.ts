@@ -12,7 +12,7 @@ export default class Technician extends BaseModel {
   declare userId: number
 
   @column()
-  declare regionId: number
+  declare zoneId: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
