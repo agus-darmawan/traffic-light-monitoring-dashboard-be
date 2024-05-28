@@ -65,7 +65,7 @@ export default class AuthController {
                 password: data.password,
             });
             // console.log(user);
-            // await mail.send(new VerifyEmailNotification(user));
+            await mail.send(new VerifyEmailNotification(user));
 
             return responseUtil.success(response, null, 'Please check your email inbox (and spam) for an access link.');
         } catch (e) {
