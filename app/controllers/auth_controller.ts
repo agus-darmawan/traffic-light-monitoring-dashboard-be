@@ -26,7 +26,6 @@ export default class AuthController {
         try {
             const user = await User.verifyCredentials(data.email, data.password);
             const token = await User.authTokens.create(user, ['*'], { expiresIn: '1 year' });
-            console.log(token);
             if (!token.value!.release()) {
                 return responseUtil.conflict(response, 'Invalid email or password.');
             }
