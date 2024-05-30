@@ -14,6 +14,7 @@ export default function authRoutes() {
             router.get('/user', [AuthController, 'user'])
             router.post('/logout', [AuthController, 'logout'])
             router.post('/email/verify/resend', [AuthController, 'resendVerificationEmail'])
+            router.get('/role', [AuthController, 'indexRole'])
         }).middleware(middleware.auth({ guards: ['api'] }))
     }).prefix('/auth')
 }

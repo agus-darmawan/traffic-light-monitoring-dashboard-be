@@ -172,4 +172,9 @@ export default class AuthController {
 
         return responseUtil.success(response, null, 'Password reset successfully.');
     }
+
+    async indexRole ({response, auth} : HttpContext) {
+        const user = await auth.authenticate()
+        return responseUtil.success(response, user.role, `Role is ${user.role}`);
+    }
 }

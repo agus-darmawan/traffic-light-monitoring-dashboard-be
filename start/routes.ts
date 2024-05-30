@@ -22,11 +22,13 @@ router.group(() => {
   statusesRoutes()
   router.group(() => {
     router.group(() => {
-      dashboardRoutes()
-      zoneRoutes()
-      regionsRoutes()
-      devicesRoutes()
-      usersRoutes()
+      router.group(()=> {
+        dashboardRoutes()
+        zoneRoutes()
+        regionsRoutes()
+        devicesRoutes()
+        usersRoutes()
+      }).middleware(middleware.roleMiddleware("admin"))
     }).middleware(middleware.verifiedEmail())
   }).middleware(middleware.auth({ guards: ['api'] }))
 
