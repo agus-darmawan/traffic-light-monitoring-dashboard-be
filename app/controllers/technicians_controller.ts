@@ -22,7 +22,7 @@ export default class TechniciansController {
             .compile(
                 vine.object({
                     user_id: vine.number(),
-                    region_id: vine.number()
+                    zone_id: vine.number()
                 })
             )
             .validate(request.all(), {
@@ -33,7 +33,7 @@ export default class TechniciansController {
 
         const zone = await Technician.create({
             userId: data.user_id,
-            regionId: data.region_id,
+            zoneId: data.zone_id,
         })
 
         return responseUtil.created(response, zone)
@@ -49,7 +49,7 @@ export default class TechniciansController {
             .compile(
                 vine.object({
                     user_id: vine.number(),
-                    region_id: vine.number()
+                    zone_id: vine.number()
                 })
             )
             .validate(request.all(), {
@@ -59,7 +59,7 @@ export default class TechniciansController {
             })
 
         zone.userId = data.user_id
-        zone.regionId = data.region_id
+        zone.zoneId = data.zone_id
         await zone.save()
 
         return responseUtil.success(response, zone, 'Technician updated successfully')

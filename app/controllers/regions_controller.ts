@@ -5,9 +5,20 @@ import { responseUtil } from '../../helper/response_util.js'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export default class RegionsController {
-  async index({ response }: HttpContext) {
+  async index({ request, response }: HttpContext) {
     try {
-      const regions = await Region.all();
+      const { page = 1, limit = 10, search, zoneId = '' } = request.qs();
+      const limitNumber = parseInt(limit, 10);
+      const offset = (page - 1) * limitNumber;
+      const query = Region.query();
+      if (search) {
+        query.where('name', 'ILIKE', `%${search}%`);
+      }
+      if (zoneId) {
+        query.where('zone_id', zoneId);
+      }
+
+      const regions = await query.limit(limitNumber).offset(offset);
       const regionsWithZoneNames = await Promise.all(
         regions.map(async (region) => {
           const zone = await Zone.find(region.zoneId);
@@ -17,14 +28,15 @@ export default class RegionsController {
             zone_id: region.zoneId,
             zone_name: zone ? zone.name : null,
             timezone: region.timezone,
-          };
+          }
         })
-      );
+      )
       return responseUtil.success(response, regionsWithZoneNames, 'Regions retrieved successfully');
     } catch (error) {
-      return responseUtil.notFound(response, 'Failed to retrieve regions');
+      return responseUtil.notFound(error, 'Failed to retrieve regions');
     }
   }
+
 
   async show({ params, response }: HttpContext) {
     const region = await Region.find(params.id)
@@ -33,6 +45,7 @@ export default class RegionsController {
     }
     return responseUtil.success(response, region, 'Region retrieved successfully')
   }
+
   async showByZoneId({ params, response }: HttpContext) {
     try {
       const zone = await Zone.find(params.id);

@@ -29,7 +29,7 @@ export default class UsersController {
                   zone_id: undefined,
                   zone_name: undefined,
                 };
-      
+                
                 if (role === 'technician') {
                   const technician = await Technician.findBy('user_id', user.id);
                   userData.name = technician ? technician.name : undefined;

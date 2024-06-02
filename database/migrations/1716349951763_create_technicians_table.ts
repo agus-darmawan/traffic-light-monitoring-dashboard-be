@@ -15,11 +15,11 @@ export default class extends BaseSchema {
       .onDelete('CASCADE')
       .notNullable()
       table
-      .integer('region_id')
+      .integer('zone_id')
       .notNullable()
       .unsigned()
       .references('id')
-      .inTable('regions')
+      .inTable('zones')
       .onDelete('CASCADE')
       .notNullable()
       table.timestamp('created_at')
