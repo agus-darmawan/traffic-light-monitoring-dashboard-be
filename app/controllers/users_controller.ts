@@ -34,8 +34,13 @@ export default class UsersController {
                   const technician = await Technician.findBy('user_id', user.id);
                   userData.name = technician ? technician.name : undefined;
                   userData.zone_id = technician? technician.zoneId : undefined;
-                  const zone = await Zone.findBy('id', userData.zone_id);
-                  userData.zone_name = zone? zone.name : undefined;
+                  if (userData.zone_id)  {
+                    const zone = await Zone.findBy('id', userData.zone_id);
+                    userData.zone_name = zone? zone.name : undefined;
+                  }else{
+                    userData.zone_id = 0;
+                    userData.zone_name = '';
+                  }
                 }
                 return userData;
               })
@@ -43,7 +48,7 @@ export default class UsersController {
           return responseUtil.success(response, data, 'Users retrieved successfully');
         } catch (error) {
           console.error('Error retrieving users:', error);
-          return responseUtil.notFound(response, 'An error occurred while retrieving users');
+          return responseUtil.notFound(response, `An error occurred while retrieving users ${error.message}`);
         }
     }
       
