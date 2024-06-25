@@ -30,7 +30,7 @@ export default class AuthController {
                 return responseUtil.conflict(response, 'Invalid email or password.');
             }
             console.log(token.value);
-            return responseUtil.success(response, { token: token.value!.release() });
+            return responseUtil.success(response, { token: token.value!.release(), role : user.role });
         } catch {
             return responseUtil.notFound(response, 'Invalid email or password.');
         }
